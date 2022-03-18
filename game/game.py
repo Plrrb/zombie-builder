@@ -10,7 +10,6 @@ class Game(arcade.Window):
     def __init__(self):
         super().__init__(WIDTH, HEIGHT, TITLE)
         self.background_scene = BackgroundScene()
-        self.mouse = Vector2(0, 0)
         self.inputs = BooleanInput()
 
     def on_draw(self):
@@ -29,12 +28,14 @@ class Game(arcade.Window):
         self.background_scene.on_key_release(symbol, modifiers)
 
     def on_mouse_motion(self, x, y, dx, dy):
-        self.mouse = Vector2(x, y)
-        self.background_scene.on_mouse_motion(self.mouse)
+        self.background_scene.on_mouse_motion(Vector2(x, y))
+
+    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+        self.background_scene.on_mouse_drag(Vector2(x, y), modifiers)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        self.mouse = Vector2(x, y)
-        self.background_scene.on_mouse_press(self.mouse)
+        self.background_scene.on_mouse_press(Vector2(x, y), modifiers)
 
     def on_mouse_release(self, x, y, button, modifiers):
         self.inputs.release(button)
+        self.background_scene.on_mouse_release(Vector2(x, y), modifiers)

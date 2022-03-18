@@ -43,5 +43,11 @@ class BackgroundScene:
     def on_mouse_motion(self, position):
         self.editor.on_mouse_motion(position)
 
-    def on_mouse_press(self, position):
-        self.editor.on_mouse_press(position)
+    def on_mouse_press(self, position, modifiers):
+        self.editor.on_mouse_press(position, modifiers)
+
+    def on_mouse_drag(self, position, modifiers):
+        self.editor.on_mouse_drag(position, modifiers)
+
+    def on_mouse_release(self, position, modifiers):
+        self.editor.on_mouse_release(position, modifiers)
