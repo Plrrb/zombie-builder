@@ -3,7 +3,7 @@ from math import sqrt
 
 class __Vector__(tuple):
     def inbounds(self, v1, v2):
-        return v1 < self < v2
+        return v1 < self < (v2 + v1)
 
     def length(self):
         return sum(abs(self))

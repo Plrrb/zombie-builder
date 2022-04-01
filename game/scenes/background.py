@@ -1,11 +1,11 @@
+from game.config import DOWN, LEFT, RIGHT, UP
 from game.creatures.player import Player
-
-from game.utils.input import BooleanInput
 from game.scenes.editor import EditorScene
+from game.scenes.survive import SurviveScene
+from game.utils.button import Button
+from game.utils.input import BooleanInput
 from game.utils.player_controller import PlayerController
-from game.config import UP, DOWN, LEFT, RIGHT
-
-# from game.scenes.survive import SurviveScene
+from game.utils.vector import Vector2
 
 
 class BackgroundScene:
@@ -15,14 +15,20 @@ class BackgroundScene:
         self.editor = EditorScene()
 
         self.scene_update = self.update_editor
+        self.scene_draw = self.editor.draw
         self.inputs = BooleanInput()
+        self.play_button = Button(
+            Vector2(100, 100), Vector2(100, 100), self.switch_to_survive_scene
+        )
 
     def draw(self):
-        self.editor.draw()
+        self.scene_draw()
         self.player.draw()
+        self.play_button.draw()
 
     def update(self, dt):
         self.scene_update(dt)
+        self.player.update(dt)
         self.player_controller.update(
             self.inputs[UP],
             self.inputs[DOWN],
@@ -30,9 +36,18 @@ class BackgroundScene:
             self.inputs[RIGHT],
         )
 
+    def switch_to_survive_scene(self):
+        b = self.editor.get_blocks()
+        self.survive_scene = SurviveScene(b)
+
+        self.scene_update = self.survive_scene.update
+        self.scene_draw = self.survive_scene.draw
+
     def update_editor(self, dt):
         self.editor.update(dt)
-        self.player.update(dt)
+
+    def update_survive(self, dt):
+        self.survive_scene.update(dt)
 
     def on_key_press(self, symbol, modifiers):
         self.inputs.press(symbol)
@@ -44,6 +59,7 @@ class BackgroundScene:
         self.editor.on_mouse_motion(position)
 
     def on_mouse_press(self, position, modifiers):
+        self.play_button.update(position)
         self.editor.on_mouse_press(position, modifiers)
 
     def on_mouse_drag(self, position, modifiers):

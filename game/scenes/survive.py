@@ -1,10 +1,9 @@
-from game.creatures.player import Player
-from game.creatures.zombie import Zombie
-
-
 class SurviveScene:
-    def __init__(self):
-        self.player = Player()
+    def __init__(self, blocks):
+        self.blocks = blocks
 
-    def update(self):
-        self.player.update()
+    def update(self, dt):
+        pass
+
+    def draw(self):
+        self.blocks.draw()
