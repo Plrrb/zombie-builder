@@ -11,5 +11,5 @@ class Button:
         draw_xywh_rectangle_filled(*self.position, *self.size, color=(255, 255, 255))
 
     def update(self, pos):
-        if self.position < pos < (self.size + self.position):
+        if pos.inbounds(self.position, (self.position + self.size)):
             self.on_click()
