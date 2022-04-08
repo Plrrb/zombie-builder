@@ -91,7 +91,14 @@ class Vector2(__Vector__):
     def __new__(cls, x, y):
         return super().__new__(Vector2, (x, y))
 
-    def normal(self):
+    def magnitude(self):
+        return sqrt(sum(self ** (2, 2)))
+
+    def normalize(self):
+        vmag = self.magnitude()
+        return Vector2(self[0] / vmag, self[1] / vmag)
+
+    def distribute(self):
         n = 1 / sum(self)
         return self * (n, n)
 

@@ -1,8 +1,9 @@
-from arcade import Sprite, SpriteList, draw_xywh_rectangle_filled, load_texture
+from arcade import SpriteList, draw_xywh_rectangle_filled, load_texture
 from arcade.key import MOD_SHIFT
 from game.config import BLOCK_SIZE, WOOD_BLOCK_PATH
 from game.utils.functions import fix_to_grid
 from game.utils.vector import Vector2
+from game.utils.block import WoodBlock
 
 
 class EditorScene:
@@ -53,9 +54,8 @@ class EditorScene:
 
         for pos in self.blocks:
             bs.append(
-                Sprite(
+                WoodBlock(
                     # i wish this drawed from the bottom left to top right like draw_xywh_rectangle_filled
-                    WOOD_BLOCK_PATH,
                     center_x=pos.x + 25 / 2,
                     center_y=pos.y + 25 / 2,
                 )
