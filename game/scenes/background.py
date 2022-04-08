@@ -8,6 +8,8 @@ from game.utils.player_controller import PlayerController
 from game.utils.vector import Vector2
 from arcade import PhysicsEngineSimple
 
+from game.utils.functions import combine_lists
+
 
 class BackgroundScene:
     def __init__(self):
@@ -44,10 +46,19 @@ class BackgroundScene:
     def switch_to_survive_scene(self):
         self.blocks = self.editor.get_blocks()
         self.survive_scene = SurviveScene(self.blocks)
+        self.zombies = self.survive_scene.zombies
 
         self.scene_update = self.update_survive
         self.scene_draw = self.survive_scene.draw
-        self.physics_engine = PhysicsEngineSimple(self.player, self.blocks)
+
+        self.physics_engines = []
+
+        self.physics_engines.append(
+            PhysicsEngineSimple(self.player, combine_lists(self.blocks, self.zombies))
+        )
+
+        for zombie in self.zombies:
+            self.physics_engines.append(PhysicsEngineSimple(zombie, self.blocks))
 
     def update_editor(self, dt):
         self.editor.update(dt)
@@ -55,8 +66,9 @@ class BackgroundScene:
     def update_survive(self, dt):
         self.survive_scene.update(dt)
         self.survive_scene.send_attack(self.player)
-        # collsions between player and building
-        self.physics_engine.update()
+
+        for engine in self.physics_engines:
+            engine.update()
 
     def on_key_press(self, symbol, modifiers):
         self.inputs.press(symbol)
