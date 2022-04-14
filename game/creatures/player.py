@@ -1,11 +1,12 @@
 from arcade import Sprite
+from game.config import PLAYER_PATH
 
 # from game.utils.vector import Vector2
 
 
 class Player(Sprite):
     def __init__(self):
-        super().__init__(":resources:images/animated_characters/robot/robot_idle.png")
+        super().__init__(PLAYER_PATH)
         self.position = [200, 200]
         self.velocity = [0, 0]
         # self.size = Vector2(50, 50)

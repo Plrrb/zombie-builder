@@ -1,10 +1,11 @@
 import arcade
+from game.config import ZOMBIE_PATH
 from game.utils.vector import Vector2
 
 
 class Zombie(arcade.Sprite):
     def __init__(self, position):
-        super().__init__(":resources:images/animated_characters/zombie/zombie_idle.png")
+        super().__init__(ZOMBIE_PATH)
         self.position = position
         self.max_speed = (4, 4)
 

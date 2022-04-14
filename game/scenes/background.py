@@ -43,6 +43,16 @@ class BackgroundScene:
             self.inputs[RIGHT],
         )
 
+    def update_editor(self, dt):
+        self.editor.update(dt)
+
+    def update_survive(self, dt):
+        self.survive_scene.update(dt)
+        self.survive_scene.send_attack(self.player)
+
+        for engine in self.physics_engines:
+            engine.update()
+
     def switch_to_survive_scene(self):
         self.blocks = self.editor.get_blocks()
         self.survive_scene = SurviveScene(self.blocks)
@@ -59,16 +69,6 @@ class BackgroundScene:
 
         for zombie in self.zombies:
             self.physics_engines.append(PhysicsEngineSimple(zombie, self.blocks))
-
-    def update_editor(self, dt):
-        self.editor.update(dt)
-
-    def update_survive(self, dt):
-        self.survive_scene.update(dt)
-        self.survive_scene.send_attack(self.player)
-
-        for engine in self.physics_engines:
-            engine.update()
 
     def on_key_press(self, symbol, modifiers):
         self.inputs.press(symbol)
