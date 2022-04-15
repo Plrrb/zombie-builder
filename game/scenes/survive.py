@@ -1,3 +1,4 @@
+from game.config import HEIGHT, WIDTH, ZOMBIE_SPEED
 from game.creatures.zombie import Zombie
 import arcade
 
@@ -6,9 +7,12 @@ class SurviveScene:
     def __init__(self, blocks):
         self.blocks = blocks
         self.zombies = arcade.SpriteList()
+        self.spawn_zombies(1)
 
-        for i in range(3):
-            self.zombies.append(Zombie([200 * i + 200, 200]))
+    def spawn_zombies(self, nzombies):
+        self.zombies.append(Zombie([-100, HEIGHT / 2], ZOMBIE_SPEED))
+        self.zombies.append(Zombie([WIDTH + 100, HEIGHT / 2], ZOMBIE_SPEED))
+        self.zombies.append(Zombie([WIDTH / 2, HEIGHT + 100], ZOMBIE_SPEED))
 
     def update(self, dt):
         self.zombies.update()

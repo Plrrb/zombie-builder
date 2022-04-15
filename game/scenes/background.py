@@ -1,14 +1,14 @@
-from game.config import DOWN, LEFT, RIGHT, UP
+from arcade import PhysicsEngineSimple
+from game.config import DOWN, LEFT, RIGHT, UP, ZOMBIE_DAMAGE
 from game.creatures.player import Player
 from game.scenes.editor import EditorScene
 from game.scenes.survive import SurviveScene
 from game.utils.button import Button
+from game.utils.functions import combine_lists
 from game.utils.input import BooleanInput
 from game.utils.player_controller import PlayerController
 from game.utils.vector import Vector2
-from arcade import PhysicsEngineSimple
-
-from game.utils.functions import combine_lists
+from arcade import check_for_collision_with_list
 
 
 class BackgroundScene:
@@ -49,6 +49,12 @@ class BackgroundScene:
     def update_survive(self, dt):
         self.survive_scene.update(dt)
         self.survive_scene.send_attack(self.player)
+
+        hits = len(
+            check_for_collision_with_list(self.player, self.survive_scene.zombies)
+        )
+
+        self.player.deal_damage(hits * ZOMBIE_DAMAGE * dt)
 
         for engine in self.physics_engines:
             engine.update()

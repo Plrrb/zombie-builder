@@ -1,19 +1,36 @@
+from random import randint, random
 import arcade
 from game.config import ZOMBIE_PATH
 from game.utils.vector import Vector2
 
 
 class Zombie(arcade.Sprite):
-    def __init__(self, position):
+    def __init__(self, position, max_speed):
         super().__init__(ZOMBIE_PATH)
         self.position = position
-        self.max_speed = (4, 4)
+
+        s = random()
+        self.max_speed = Vector2(*max_speed) - (s, s)
 
     def goto(self, pos):
-        x = pos[0] - self.position[0]
-        y = pos[1] - self.position[1]
+        x = (pos[0] - self.position[0]) + randint(-250, 250)
+        y = (pos[1] - self.position[1]) + randint(-250, 250)
 
-        self.velocity = list(Vector2(x, y).normalize() * self.max_speed)
+        try:
+            d = Vector2(x, y).normalize()
+        except ZeroDivisionError:
+            return
+
+        self.velocity = list(d * self.max_speed)
 
     def attack(self, block):
-        self.goto(block.position)
+        # c = Bezier.Points(
+        #     30,
+        #     (
+        #         Vector2(*self.position),
+        #         Vector2(*block.position),
+        #     ),
+        # )
+        # print(c)
+        v = Vector2(block.position[0], block.position[1])
+        self.goto(v)

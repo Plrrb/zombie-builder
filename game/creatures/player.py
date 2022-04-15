@@ -1,5 +1,5 @@
 from arcade import Sprite
-from game.config import PLAYER_PATH
+from game.config import PLAYER_PATH, PLAYER_SPEED
 
 # from game.utils.vector import Vector2
 
@@ -9,17 +9,15 @@ class Player(Sprite):
         super().__init__(PLAYER_PATH)
         self.position = [200, 200]
         self.velocity = [0, 0]
-        # self.size = Vector2(50, 50)
-        # self.color = (255, 0, 127)
-        self.max_speed = (5, 5)
+        self.max_speed = PLAYER_SPEED
         self.friction = (0.5, 0.5)
+        self.health = 100
 
     def update(self, dt):
         super().update()
-        # self.update_position(dt)
-
-    # def update_position(self, dt):
-    #     self.position += self.velocity * (dt, dt)
 
     def move(self, x, y):
         self.velocity = [x * self.max_speed[0], y * self.max_speed[1]]
+
+    def deal_damage(self, damage):
+        self.health -= damage
