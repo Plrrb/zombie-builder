@@ -16,6 +16,7 @@ WOOD_BLOCK_PATH = "game/images/wood_block.png"
 ZOMBIE_PATH = ":resources:images/animated_characters/zombie/zombie_idle.png"
 PLAYER_PATH = ":resources:images/animated_characters/robot/robot_idle.png"
 
+ZOMBIE_TO_BLOCK_DAMAGE = 7
 
 ZOMBIE_SPEED = (3, 3)
 ZOMBIE_DAMAGE = 20

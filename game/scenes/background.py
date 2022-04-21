@@ -1,14 +1,15 @@
-from arcade import PhysicsEngineSimple
+from arcade import PhysicsEngineSimple, check_for_collision_with_list
 from game.config import DOWN, LEFT, RIGHT, UP, ZOMBIE_DAMAGE
 from game.creatures.player import Player
 from game.scenes.editor import EditorScene
 from game.scenes.survive import SurviveScene
 from game.utils.button import Button
-from game.utils.functions import combine_lists
+from game.utils.functions import combined_lists
 from game.utils.input import BooleanInput
 from game.utils.player_controller import PlayerController
 from game.utils.vector import Vector2
-from arcade import check_for_collision_with_list
+from arcade import SpriteList
+from game.config import ZOMBIE_TO_BLOCK_DAMAGE
 
 
 class BackgroundScene:
@@ -47,6 +48,9 @@ class BackgroundScene:
         self.editor.update(dt)
 
     def update_survive(self, dt):
+        for engine in self.physics_engines:
+            engine.update()
+
         self.survive_scene.update(dt)
         self.survive_scene.send_attack(self.player)
 
@@ -56,12 +60,8 @@ class BackgroundScene:
 
         self.player.deal_damage(hits * ZOMBIE_DAMAGE * dt)
 
-        for engine in self.physics_engines:
-            engine.update()
-
     def switch_to_survive_scene(self):
-        self.blocks = self.editor.get_blocks()
-        self.survive_scene = SurviveScene(self.blocks)
+        self.survive_scene = SurviveScene(self.editor.get_blocks())
         self.zombies = self.survive_scene.zombies
 
         self.scene_update = self.update_survive
@@ -70,11 +70,16 @@ class BackgroundScene:
         self.physics_engines = []
 
         self.physics_engines.append(
-            PhysicsEngineSimple(self.player, combine_lists(self.blocks, self.zombies))
+            PhysicsEngineSimple(
+                self.player,
+                SpriteList(combined_lists(self.survive_scene.blocks, self.zombies)),
+            )
         )
 
         for zombie in self.zombies:
-            self.physics_engines.append(PhysicsEngineSimple(zombie, self.blocks))
+            self.physics_engines.append(
+                PhysicsEngineSimple(zombie, self.survive_scene.blocks)
+            )
 
     def on_key_press(self, symbol, modifiers):
         self.inputs.press(symbol)

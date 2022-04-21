@@ -24,13 +24,5 @@ class Zombie(arcade.Sprite):
         self.velocity = list(d * self.max_speed)
 
     def attack(self, block):
-        # c = Bezier.Points(
-        #     30,
-        #     (
-        #         Vector2(*self.position),
-        #         Vector2(*block.position),
-        #     ),
-        # )
-        # print(c)
         v = Vector2(block.position[0], block.position[1])
         self.goto(v)
