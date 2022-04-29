@@ -9,7 +9,7 @@ class SurviveScene:
     def __init__(self, blocks):
         self.blocks = blocks
         self.zombies = arcade.SpriteList()
-        self.spawn_zombies(1)
+        # self.spawn_zombies(1)
 
     def spawn_zombies(self, nzombies):
         self.zombies.append(Zombie([-100, HEIGHT / 2], ZOMBIE_SPEED))

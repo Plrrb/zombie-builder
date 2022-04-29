@@ -12,7 +12,12 @@ DOWN = key.S
 LEFT = key.A
 RIGHT = key.D
 
+BULLET_SPEED = (5, 5)
+
 WOOD_BLOCK_PATH = "game/images/wood_block.png"
+BULLET_PATH = ":resources:images/space_shooter/laserBlue01.png"
+
+
 ZOMBIE_PATH = ":resources:images/animated_characters/zombie/zombie_idle.png"
 PLAYER_PATH = ":resources:images/animated_characters/robot/robot_idle.png"
 

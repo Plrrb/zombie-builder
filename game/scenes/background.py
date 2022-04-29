@@ -1,3 +1,4 @@
+from turtle import pos
 from arcade import PhysicsEngineSimple, check_for_collision_with_list
 from game.config import DOWN, LEFT, RIGHT, UP, ZOMBIE_DAMAGE
 from game.creatures.player import Player
@@ -10,6 +11,7 @@ from game.utils.player_controller import PlayerController
 from game.utils.vector import Vector2
 from arcade import SpriteList
 from game.config import ZOMBIE_TO_BLOCK_DAMAGE
+from game.utils.bullet import Bullet
 
 
 class BackgroundScene:
@@ -22,6 +24,8 @@ class BackgroundScene:
         self.scene = self.editor
         self.scene_update = self.update_editor
         self.scene_draw = self.editor.draw
+        self.on_mouse_press = self.editor_on_mouse_press
+        self.bullets = []
 
         self.play_button = Button(
             Vector2(100, 100), Vector2(100, 100), self.switch_to_survive_scene
@@ -29,8 +33,10 @@ class BackgroundScene:
 
     def draw(self):
         self.scene_draw()
-        self.player.draw()
         self.play_button.draw()
+        self.player.draw()
+        for bullet in self.bullets:
+            bullet.draw()
 
     def update(self, dt):
         self.scene_update(dt)
@@ -48,6 +54,10 @@ class BackgroundScene:
         self.editor.update(dt)
 
     def update_survive(self, dt):
+
+        for bullet in self.bullets:
+            bullet.update()
+
         for engine in self.physics_engines:
             engine.update()
 
@@ -66,13 +76,19 @@ class BackgroundScene:
 
         self.scene_update = self.update_survive
         self.scene_draw = self.survive_scene.draw
+        self.on_mouse_press = self.survive_on_mouse_press
 
         self.physics_engines = []
+
+        blocks_and_zombies = SpriteList()
+
+        for thing in combined_lists(self.survive_scene.blocks, self.zombies):
+            blocks_and_zombies.append(thing)
 
         self.physics_engines.append(
             PhysicsEngineSimple(
                 self.player,
-                SpriteList(combined_lists(self.survive_scene.blocks, self.zombies)),
+                blocks_and_zombies,
             )
         )
 
@@ -90,8 +106,14 @@ class BackgroundScene:
     def on_mouse_motion(self, position):
         self.scene.on_mouse_motion(position)
 
-    def on_mouse_press(self, position, modifiers):
+    def editor_on_mouse_press(self, position, modifiers):
         self.play_button.update(position)
+        self.scene.on_mouse_press(position, modifiers)
+
+    def survive_on_mouse_press(self, position, modifiers):
+        velocity = Vector2(*(position - Vector2(*self.player.position))).normalize()
+
+        self.bullets.append(Bullet(self.player.position, velocity))
         self.scene.on_mouse_press(position, modifiers)
 
     def on_mouse_drag(self, position, modifiers):
