@@ -1,6 +1,10 @@
 from turtle import pos
-from arcade import PhysicsEngineSimple, check_for_collision_with_list
-from game.config import DOWN, LEFT, RIGHT, UP, ZOMBIE_DAMAGE
+from arcade import (
+    PhysicsEngineSimple,
+    check_for_collision_with_list,
+    check_for_collision_with_lists,
+)
+from game.config import DOWN, HEIGHT, LEFT, RIGHT, UP, WIDTH, ZOMBIE_TO_PLAYER_DAMAGE
 from game.creatures.player import Player
 from game.scenes.editor import EditorScene
 from game.scenes.survive import SurviveScene
@@ -10,7 +14,7 @@ from game.utils.input import BooleanInput
 from game.utils.player_controller import PlayerController
 from game.utils.vector import Vector2
 from arcade import SpriteList
-from game.config import ZOMBIE_TO_BLOCK_DAMAGE
+from game.config import BULLET_TO_ZOMBIE_DAMAGE
 from game.utils.bullet import Bullet
 
 
@@ -25,7 +29,7 @@ class BackgroundScene:
         self.scene_update = self.update_editor
         self.scene_draw = self.editor.draw
         self.on_mouse_press = self.editor_on_mouse_press
-        self.bullets = []
+        self.bullets = SpriteList()
 
         self.play_button = Button(
             Vector2(100, 100), Vector2(100, 100), self.switch_to_survive_scene
@@ -35,8 +39,8 @@ class BackgroundScene:
         self.scene_draw()
         self.play_button.draw()
         self.player.draw()
-        for bullet in self.bullets:
-            bullet.draw()
+
+        self.bullets.draw()
 
     def update(self, dt):
         self.scene_update(dt)
@@ -54,9 +58,11 @@ class BackgroundScene:
         self.editor.update(dt)
 
     def update_survive(self, dt):
-
+        self.bullets.update()
         for bullet in self.bullets:
-            bullet.update()
+            if not Vector2(*bullet.position).inbounds((0, 0), (WIDTH, HEIGHT)):
+                self.bullets.remove(bullet)
+                print("bullet removed")
 
         for engine in self.physics_engines:
             engine.update()
@@ -64,11 +70,24 @@ class BackgroundScene:
         self.survive_scene.update(dt)
         self.survive_scene.send_attack(self.player)
 
+        zombies_to_be_removed = []
+
+        for zombie in self.survive_scene.zombies:
+            if zombie.sub_health(
+                len(check_for_collision_with_list(zombie, self.bullets))
+                * BULLET_TO_ZOMBIE_DAMAGE
+                * dt
+            ):
+                zombies_to_be_removed.append(zombie)
+
+        for zombie in zombies_to_be_removed:
+            self.survive_scene.zombies.remove(zombie)
+
         hits = len(
             check_for_collision_with_list(self.player, self.survive_scene.zombies)
         )
 
-        self.player.deal_damage(hits * ZOMBIE_DAMAGE * dt)
+        self.player.sub_health(hits * ZOMBIE_TO_PLAYER_DAMAGE * dt)
 
     def switch_to_survive_scene(self):
         self.survive_scene = SurviveScene(self.editor.get_blocks())

@@ -22,7 +22,8 @@ ZOMBIE_PATH = ":resources:images/animated_characters/zombie/zombie_idle.png"
 PLAYER_PATH = ":resources:images/animated_characters/robot/robot_idle.png"
 
 ZOMBIE_TO_BLOCK_DAMAGE = 7
+BULLET_TO_ZOMBIE_DAMAGE = 15
+ZOMBIE_TO_PLAYER_DAMAGE = 20
 
 ZOMBIE_SPEED = (3, 3)
-ZOMBIE_DAMAGE = 20
 PLAYER_SPEED = (5, 5)
