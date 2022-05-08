@@ -2,7 +2,6 @@ import arcade
 
 from game.config import HEIGHT, TITLE, WIDTH
 from game.scenes.background import BackgroundScene
-from game.utils.input import BooleanInput
 from game.utils.vector import Vector2
 
 
@@ -10,7 +9,6 @@ class Game(arcade.Window):
     def __init__(self):
         super().__init__(WIDTH, HEIGHT, TITLE)
         self.background_scene = BackgroundScene()
-        self.inputs = BooleanInput()
 
     def on_draw(self):
         self.clear()
@@ -20,11 +18,9 @@ class Game(arcade.Window):
         self.background_scene.update(dt)
 
     def on_key_press(self, symbol, modifiers):
-        self.inputs.press(symbol)
         self.background_scene.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol, modifiers):
-        self.inputs.release(symbol)
         self.background_scene.on_key_release(symbol, modifiers)
 
     def on_mouse_motion(self, x, y, dx, dy):
@@ -37,5 +33,4 @@ class Game(arcade.Window):
         self.background_scene.on_mouse_press(Vector2(x, y), modifiers)
 
     def on_mouse_release(self, x, y, button, modifiers):
-        self.inputs.release(button)
         self.background_scene.on_mouse_release(Vector2(x, y), modifiers)

@@ -1,9 +1,10 @@
 from arcade import SpriteList, draw_xywh_rectangle_filled, load_texture
 from arcade.key import MOD_SHIFT
 from game.config import BLOCK_SIZE, WOOD_BLOCK_PATH
+from game.utils.block import WoodBlock
+from game.utils.button import Button
 from game.utils.functions import fix_to_grid
 from game.utils.vector import Vector2
-from game.utils.block import WoodBlock
 
 
 class EditorScene:
@@ -12,13 +13,15 @@ class EditorScene:
         self.blocks = {}
         self.block_texture = load_texture(WOOD_BLOCK_PATH)
 
+        self.play_button = Button(Vector2(100, 100), Vector2(100, 100))
+
     def draw(self):
 
         for block in self.blocks:
             self.block_texture.draw_transformed(*block, *BLOCK_SIZE)
-            # draw_xywh_rectangle_filled(*block, *BLOCK_SIZE, (255, 0, 0))
 
         draw_xywh_rectangle_filled(*self.shadow, *BLOCK_SIZE, (255, 255, 255))
+        self.play_button.draw()
 
     def update(self, dt):
         pass

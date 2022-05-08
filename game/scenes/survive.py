@@ -1,57 +1,59 @@
-import math
-
-import arcade
-from game.config import HEIGHT, WIDTH, ZOMBIE_SPEED, ZOMBIE_TO_BLOCK_DAMAGE
-from game.creatures.zombie import Zombie
+from game.config import BULLET_TO_ZOMBIE_DAMAGE, HEIGHT, WIDTH, ZOMBIE_TO_BLOCK_DAMAGE
+from game.managers.bullet_manager import BulletManager
+from game.managers.zombie_manager import ZombieManager
 
 
 class SurviveScene:
     def __init__(self, blocks):
         self.blocks = blocks
-        self.zombies = arcade.SpriteList()
-        self.spawn_zombies(1)
+        self.bullet_manager = BulletManager()
+        self.zombie_manager = ZombieManager()
+        self.zombie_manager.spawn_zombies(3)
 
-    def spawn_zombies(self, nzombies):
-        self.zombies.append(Zombie([-100, HEIGHT / 2], ZOMBIE_SPEED))
-        self.zombies.append(Zombie([WIDTH + 100, HEIGHT / 2], ZOMBIE_SPEED))
-        self.zombies.append(Zombie([WIDTH / 2, HEIGHT + 100], ZOMBIE_SPEED))
+    def deal_bullet_damage_to_zombies(self, dt):
+        for zombie in self.zombie_manager.zombies:
+            damage = (
+                len(self.bullet_manager.check_for_hits(zombie))
+                * BULLET_TO_ZOMBIE_DAMAGE
+                * dt
+            )
 
-    def get_zombie_block_collision(self):
-        hits = []
+            if zombie.sub_health(damage):
+                self.zombie_manager.remove_zombie(zombie)
 
-        for zombie in self.zombies:
-            for block in self.blocks:
-                # this collions sucks
-                if math.dist(zombie.position, block.position) < 100:
-                    hits.append(block)
+    def deal_damage_to_blocks_by_zombies(self, dt):
+        for block in self.blocks:
+            if self.zombie_manager.check_for_hits(block) and block.sub_health(
+                ZOMBIE_TO_BLOCK_DAMAGE * dt
+            ):
 
-        return hits
+                # blocks_to_be_removed = set(blocks_to_be_removed)
+                self.blocks.remove(block)
 
     def update(self, dt):
-        self.zombies.update()
-        hits = self.get_zombie_block_collision()
-        self.zombie_hit_blocks(hits, ZOMBIE_TO_BLOCK_DAMAGE * dt)
+        self.zombie_manager.update(dt)
+        self.bullet_manager.update(dt)
+        self.bullet_manager.remove_bullets_outside(WIDTH, HEIGHT)
 
-    def zombie_hit_blocks(self, hit_blocks, damage):
-        blocks_to_be_removed = []
-
-        for block in hit_blocks:
-            if block.sub_health(damage):
-                blocks_to_be_removed.append(block)
-
-        blocks_to_be_removed = set(blocks_to_be_removed)
-
-        for block in blocks_to_be_removed:
-            self.blocks.remove(block)
+        self.deal_bullet_damage_to_zombies(dt)
+        self.deal_damage_to_blocks_by_zombies(dt)
 
     def send_attack(self, player):
-        for zombie in self.zombies:
-            zombie.attack(player)
+        self.zombie_manager.send_attack(player)
 
     def draw(self):
         self.blocks.draw()
-        for zombie in self.zombies:
-            zombie.draw()
+        self.bullet_manager.draw()
+        self.zombie_manager.draw()
+
+    def shoot(self, position, velocity):
+        self.bullet_manager.shoot_at(position, velocity)
+
+    def get_sprite_to_zombie_hits(self, sprite):
+        return self.zombie_manager.check_for_hits(sprite)
+
+    def get_zombies(self):
+        return self.zombie_manager.zombies
 
     def on_mouse_motion(self, position):
         pass

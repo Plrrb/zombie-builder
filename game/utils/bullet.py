@@ -1,7 +1,7 @@
+import math
+
 from arcade import Sprite
 from game.config import BULLET_PATH, BULLET_SPEED
-
-import math
 
 
 class Bullet(Sprite):

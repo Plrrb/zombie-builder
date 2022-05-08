@@ -1,6 +1,6 @@
 from arcade import Sprite
 from game.config import WOOD_BLOCK_PATH
-from game.utils.health import HealthManager
+from game.managers.health_manager import HealthManager
 
 
 class WoodBlock(Sprite, HealthManager):
