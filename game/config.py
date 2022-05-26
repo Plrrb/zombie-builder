@@ -13,6 +13,8 @@ RIGHT = key.D
 
 # Image Paths
 WOOD_BLOCK_PATH = "game/images/wood_block.png"
+METAL_BLOCK_PATH = "game/images/metal_block.png"
+
 BULLET_PATH = ":resources:images/space_shooter/laserBlue01.png"
 ZOMBIE_PATH = ":resources:images/animated_characters/zombie/zombie_idle.png"
 PLAYER_PATH = ":resources:images/animated_characters/robot/robot_idle.png"

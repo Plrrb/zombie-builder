@@ -10,20 +10,10 @@ class Bullet(Sprite):
         self.position = position
         self.velocity = velocity * BULLET_SPEED
 
-        # top right quadrant
-        if velocity.x > 0 and velocity.y > 0:
-            angle = math.atan(abs(velocity.y / velocity.x)) * 57.2958
+        angle = math.atan2(velocity[1], velocity[0])
+        angle_deg = math.degrees(angle)
 
-        # top left quadrant:
-        if velocity.x < 0 and velocity.y > 0:
-            angle = math.atan(abs(velocity.x / velocity.y)) * 57.2958 + 90
+        if angle_deg < 0:
+            angle_deg += 360
 
-        # bottom left quadrant
-        if velocity.x < 0 and velocity.y < 0:
-            angle = math.atan(abs(velocity.y / velocity.x)) * 57.2958 + 180
-
-        # bottom right quadrant:
-        if velocity.x > 0 and velocity.y < 0:
-            angle = math.atan(abs(velocity.x / velocity.y)) * 57.2958 + 270
-
-        self.angle = angle
+        self.angle = angle_deg

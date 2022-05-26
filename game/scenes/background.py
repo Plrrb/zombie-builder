@@ -91,10 +91,14 @@ class BackgroundScene:
 
     def survive_on_mouse_press(self, position, modifiers):
         self.scene.on_mouse_press(position, modifiers)
+        velocity = (
+            position[0] - self.player.position[0],
+            position[1] - self.player.position[1],
+        )
 
-        velocity = Vector2(*(position - Vector2(*self.player.position))).normalize()
+        velocity = Vector2(*velocity).normalize()
 
-        self.survive_scene.shoot(self.player.position, velocity)
+        self.survive_scene.shoot_from(self.player.position, velocity)
 
     def on_key_press(self, symbol, modifiers):
         self.inputs.press(symbol)

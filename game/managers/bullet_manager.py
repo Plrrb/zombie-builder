@@ -3,7 +3,6 @@ from game.utils.bullet import Bullet
 
 
 class BulletManager:
-
     def __init__(self):
         self.bullets = arcade.SpriteList()
 
@@ -15,12 +14,15 @@ class BulletManager:
         self.bullets.update()
 
     def remove_bullets_outside(self, width, height):
+        removed = []
         for bullet in self.bullets:
-            if not (0 < bullet.position[0] < width
-                    and 0 < bullet.position[0] < height):
-                self.bullets.remove(bullet)
+            if not (0 < bullet.position[0] < width and 0 < bullet.position[0] < height):
+                removed.append(bullet)
 
-    def shoot_at(self, position, velocity):
+        for bullet in removed:
+            self.bullets.remove(bullet)
+
+    def shoot_from(self, position, velocity):
         self.bullets.append(Bullet(position, velocity))
 
     def check_for_hits(self, sprite):

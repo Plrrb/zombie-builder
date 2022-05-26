@@ -46,8 +46,8 @@ class SurviveScene:
         self.bullet_manager.draw()
         self.zombie_manager.draw()
 
-    def shoot(self, position, velocity):
-        self.bullet_manager.shoot_at(position, velocity)
+    def shoot_from(self, position, velocity):
+        self.bullet_manager.shoot_from(position, velocity)
 
     def get_sprite_to_zombie_hits(self, sprite):
         return self.zombie_manager.check_for_hits(sprite)
