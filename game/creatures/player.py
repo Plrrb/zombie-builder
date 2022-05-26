@@ -1,20 +1,20 @@
 from arcade import Sprite
-from game.config import PLAYER_PATH, PLAYER_SPEED
+from game.config import PLAYER_HEALTH, PLAYER_PATH, PLAYER_SPEED
 from game.managers.health_manager import HealthManager
 
 
-class Player(Sprite, HealthManager):
+class Player(Sprite):
     def __init__(self):
         super().__init__(PLAYER_PATH)
         self.position = [200, 200]
         self.velocity = [0, 0]
-        self.max_speed = PLAYER_SPEED
         self.friction = (0.5, 0.5)
-        self.health = 100
+        self.max_speed = PLAYER_SPEED
+        self.health = HealthManager(PLAYER_HEALTH)
 
     def draw(self):
         super().draw()
-        self.draw_health_bar()
+        self.health.draw_health_bar(*self.position)
 
     def update(self, dt):
         super().update()

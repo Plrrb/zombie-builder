@@ -1,10 +1,10 @@
-import arcade
+from arcade import check_for_collision_with_list, SpriteList
 from game.utils.bullet import Bullet
 
 
 class BulletManager:
     def __init__(self):
-        self.bullets = arcade.SpriteList()
+        self.bullets = SpriteList()
 
     def draw(self):
         for bullet in self.bullets:
@@ -26,4 +26,4 @@ class BulletManager:
         self.bullets.append(Bullet(position, velocity))
 
     def check_for_hits(self, sprite):
-        return arcade.check_for_collision_with_list(sprite, self.bullets)
+        return check_for_collision_with_list(sprite, self.bullets)

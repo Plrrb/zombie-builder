@@ -19,6 +19,10 @@ BULLET_PATH = ":resources:images/space_shooter/laserBlue01.png"
 ZOMBIE_PATH = ":resources:images/animated_characters/zombie/zombie_idle.png"
 PLAYER_PATH = ":resources:images/animated_characters/robot/robot_idle.png"
 
+# Health Values
+ZOMBIE_HEALTH = 100
+PLAYER_HEALTH = 100
+
 # Damage Settings
 ZOMBIE_TO_BLOCK_DAMAGE = 30
 BULLET_TO_ZOMBIE_DAMAGE = 15

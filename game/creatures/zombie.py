@@ -1,23 +1,26 @@
 from random import randint, random
 
 import arcade
-from game.config import ZOMBIE_PATH, ZOMBIE_SPEED
+from game.config import ZOMBIE_HEALTH, ZOMBIE_PATH, ZOMBIE_SPEED
 from game.managers.health_manager import HealthManager
 from game.utils.vector import Vector2
 
 
-class Zombie(arcade.Sprite, HealthManager):
+class Zombie(arcade.Sprite):
     def __init__(self, position):
         super().__init__(ZOMBIE_PATH)
         self.position = position
-        self.health = 100
+        self.health = HealthManager(ZOMBIE_HEALTH)
 
         s = random()
         self.max_speed = Vector2(*ZOMBIE_SPEED) - (s, s)
 
+    def sub_health(self, value):
+        return self.health.sub_health(value)
+
     def draw(self):
         super().draw()
-        self.draw_health_bar()
+        self.health.draw_health_bar(*self.position)
 
     def goto(self, pos):
         x = (pos[0] - self.position[0]) + randint(-250, 250)

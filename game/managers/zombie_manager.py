@@ -1,13 +1,13 @@
 import math
 
-import arcade
+from arcade import check_for_collision_with_list, SpriteList
 from game.config import HEIGHT, WIDTH
 from game.creatures.zombie import Zombie
 
 
 class ZombieManager:
     def __init__(self) -> None:
-        self.zombies = arcade.SpriteList()
+        self.zombies = SpriteList()
 
     def draw(self):
         for zombie in self.zombies:
@@ -18,6 +18,13 @@ class ZombieManager:
 
     def update(self, dt):
         self.zombies.update()
+
+    def do_damage_to_all_colliding_zombies(self, sprite_list, damage):
+        for zombie in self.zombies:
+            z_damage = len(check_for_collision_with_list(zombie, sprite_list)) * damage
+
+            if zombie.health.sub_health(z_damage):
+                self.zombies.remove(zombie)
 
     def check_for_hits(self, sprite):
         hits = []

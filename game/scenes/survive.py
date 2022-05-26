@@ -10,17 +10,6 @@ class SurviveScene:
         self.zombie_manager = ZombieManager()
         self.zombie_manager.spawn_zombies(3)
 
-    def deal_bullet_damage_to_zombies(self, dt):
-        for zombie in self.zombie_manager.zombies:
-            damage = (
-                len(self.bullet_manager.check_for_hits(zombie))
-                * BULLET_TO_ZOMBIE_DAMAGE
-                * dt
-            )
-
-            if zombie.sub_health(damage):
-                self.zombie_manager.remove_zombie(zombie)
-
     def deal_damage_to_blocks_by_zombies(self, dt):
         for block in self.blocks:
             if self.zombie_manager.check_for_hits(block) and block.sub_health(
@@ -35,7 +24,9 @@ class SurviveScene:
         self.bullet_manager.update(dt)
         self.bullet_manager.remove_bullets_outside(WIDTH, HEIGHT)
 
-        self.deal_bullet_damage_to_zombies(dt)
+        self.zombie_manager.do_damage_to_all_colliding_zombies(
+            self.bullet_manager.bullets, BULLET_TO_ZOMBIE_DAMAGE * dt
+        )
         self.deal_damage_to_blocks_by_zombies(dt)
 
     def send_attack(self, player):

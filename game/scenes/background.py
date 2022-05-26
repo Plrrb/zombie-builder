@@ -50,7 +50,7 @@ class BackgroundScene:
 
     def deal_zombie_to_player_damage(self, dt):
         hits = len(self.survive_scene.get_sprite_to_zombie_hits(self.player))
-        if self.player.sub_health(hits * ZOMBIE_TO_PLAYER_DAMAGE * dt):
+        if self.player.health.sub_health(hits * ZOMBIE_TO_PLAYER_DAMAGE * dt):
             print("you dead...")
 
     def switch_to_survive_scene(self):
