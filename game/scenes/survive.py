@@ -14,7 +14,7 @@ class SurviveScene:
         self.blocks = blocks
         self.bullet_manager = BulletManager()
         self.zombie_manager = ZombieManager()
-        # self.zombie_manager.spawn_zombies(3)
+        self.zombie_manager.spawn_zombies(3)
 
     def deal_damage_to_blocks_by_zombies(self, dt):
         for block in self.blocks:

@@ -20,7 +20,9 @@ class EditorScene:
 
     def draw(self):
         for block in self.blocks:
-            self.blocks[block].draw_transformed(*block, *BLOCK_SIZE)
+            self.blocks[block].draw_scaled(
+                block[0] + BLOCK_SIZE[0] / 2, block[1] + BLOCK_SIZE[1] / 2
+            )
 
         draw_xywh_rectangle_filled(*self.shadow, *BLOCK_SIZE, (255, 255, 255))
         self.play_button.draw()

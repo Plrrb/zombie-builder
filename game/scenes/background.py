@@ -21,19 +21,21 @@ class BackgroundScene:
         self.player = Player()
         self.inputs = BooleanInput()
         self.player_controller = PlayerController(self.player)
-        self.editor = EditorScene()
+        self.editor_scene = EditorScene()
 
-        self.scene = self.editor
-        self.scene_update = self.update_editor
-        self.scene_draw = self.editor.draw
-        self.on_mouse_press = self.editor_on_mouse_press
+        self.scene = self.editor_scene
 
     def draw(self):
-        self.scene_draw()
+        self.scene.draw()
         self.player.draw()
 
     def update(self, dt):
-        self.scene_update(dt)
+        self.scene.update(dt)
+
+        if self.scene == self.editor_scene:
+            self.update_editor(dt)
+        elif self.scene == self.survive_scene:
+            self.update_survive(dt)
 
         self.player.update(dt)
 
@@ -45,14 +47,12 @@ class BackgroundScene:
         )
 
     def update_editor(self, dt):
-        self.editor.update(dt)
         if self.inputs[SELECT_WOOD_BLOCK]:
-            self.editor.set_block_type_wood()
+            self.editor_scene.set_block_type_wood()
         elif self.inputs[SELECT_METAL_BLOCK]:
-            self.editor.set_block_type_metal()
+            self.editor_scene.set_block_type_metal()
 
     def update_survive(self, dt):
-        self.survive_scene.update(dt)
         self.survive_scene.send_attack(self.player)
 
         for engine in self.physics_engines:
@@ -66,51 +66,42 @@ class BackgroundScene:
             print("you dead...")
 
     def switch_to_survive_scene(self):
-        self.survive_scene = SurviveScene(self.editor.get_blocks())
+        self.survive_scene = SurviveScene(self.editor_scene.get_blocks())
         self.zombies = self.survive_scene.get_zombies()
 
         self.scene = self.survive_scene
-        self.scene_update = self.update_survive
-        self.scene_draw = self.survive_scene.draw
-        self.on_mouse_press = self.survive_on_mouse_press
 
-        self.physics_engines = []
-
-        self.physics_engines.append(
+        self.physics_engines = [
             PhysicsEngineSimple(
                 self.player,
                 self.survive_scene.blocks,
-            )
-        )
-
-        self.physics_engines.append(
+            ),
             PhysicsEngineSimple(
                 self.player,
                 self.zombies,
-            )
-        )
+            ),
+        ]
 
         for zombie in self.zombies:
             self.physics_engines.append(
                 PhysicsEngineSimple(zombie, self.survive_scene.blocks)
             )
 
-    def editor_on_mouse_press(self, position, modifiers):
+    def on_mouse_press(self, position, modifiers):
         self.scene.on_mouse_press(position, modifiers)
 
-        if self.editor.play_button.is_pressed(position):
-            self.switch_to_survive_scene()
+        if self.scene == self.editor_scene:
+            if self.editor_scene.play_button.is_pressed(position):
+                self.switch_to_survive_scene()
+        elif self.scene == self.survive_scene:
+            self.scene.on_mouse_press(position, modifiers)
+            velocity = (
+                position[0] - self.player.position[0],
+                position[1] - self.player.position[1],
+            )
 
-    def survive_on_mouse_press(self, position, modifiers):
-        self.scene.on_mouse_press(position, modifiers)
-        velocity = (
-            position[0] - self.player.position[0],
-            position[1] - self.player.position[1],
-        )
-
-        velocity = Vector2(*velocity).normalize()
-
-        self.survive_scene.shoot_from(self.player.position, velocity)
+            velocity = Vector2(*velocity).normalize()
+            self.survive_scene.shoot_from(self.player.position, velocity)
 
     def on_key_press(self, symbol, modifiers):
         self.inputs.press(symbol)
