@@ -1,5 +1,13 @@
 from arcade import PhysicsEngineSimple
-from game.config import DOWN, LEFT, RIGHT, UP, ZOMBIE_TO_PLAYER_DAMAGE
+from game.config import (
+    DOWN,
+    LEFT,
+    RIGHT,
+    SELECT_METAL_BLOCK,
+    SELECT_WOOD_BLOCK,
+    UP,
+    ZOMBIE_TO_PLAYER_DAMAGE,
+)
 from game.creatures.player import Player
 from game.managers.player_controller import PlayerController
 from game.scenes.editor import EditorScene
@@ -38,6 +46,10 @@ class BackgroundScene:
 
     def update_editor(self, dt):
         self.editor.update(dt)
+        if self.inputs[SELECT_WOOD_BLOCK]:
+            self.editor.set_block_type_wood()
+        elif self.inputs[SELECT_METAL_BLOCK]:
+            self.editor.set_block_type_metal()
 
     def update_survive(self, dt):
         self.survive_scene.update(dt)
