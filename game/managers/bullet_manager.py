@@ -1,10 +1,15 @@
-from arcade import check_for_collision_with_list, SpriteList
+from arcade import check_for_collision_with_list, SpriteList, load_sound, play_sound
 from game.utils.bullet import Bullet
+from game.config import SHOOT_SOUND
 
 
 class BulletManager:
-    def __init__(self):
+    shoot_sound = load_sound(SHOOT_SOUND)
+
+    def __init__(self, shoot_interval):
+        self.shoot_interval = shoot_interval
         self.bullets = SpriteList()
+        self.time_left_to_shoot = 0
 
     def draw(self):
         for bullet in self.bullets:
@@ -12,6 +17,7 @@ class BulletManager:
 
     def update(self, dt):
         self.bullets.update()
+        self.time_left_to_shoot -= dt
 
     def remove_bullets_outside(self, width, height):
         removed = []
@@ -24,7 +30,10 @@ class BulletManager:
             self.bullets.remove(bullet)
 
     def shoot_from(self, position, velocity):
-        self.bullets.append(Bullet(position, velocity))
+        if self.time_left_to_shoot <= 0:
+            self.bullets.append(Bullet(position, velocity))
+            self.time_left_to_shoot = self.shoot_interval
+            play_sound(self.shoot_sound, 1)
 
     def check_for_hits(self, sprite):
         return check_for_collision_with_list(sprite, self.bullets)

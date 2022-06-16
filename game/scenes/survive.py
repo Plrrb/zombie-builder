@@ -12,7 +12,7 @@ from game.managers.zombie_manager import ZombieManager
 class SurviveScene:
     def __init__(self, blocks):
         self.blocks = blocks
-        self.bullet_manager = BulletManager()
+        self.bullet_manager = BulletManager(1)
         self.zombie_manager = ZombieManager()
         self.zombie_manager.spawn_zombies(3)
 

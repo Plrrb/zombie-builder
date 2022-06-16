@@ -39,7 +39,11 @@ BULLET_TO_BLOCK_DAMAGE = 200
 # Speeds
 BULLET_SPEED = (5, 5)
 ZOMBIE_SPEED = (3, 3)
-PLAYER_SPEED = (5, 5)
+PLAYER_SPEED = (3, 3)
 
 # Sizes
 BLOCK_SIZE = (25, 25)
+
+
+# Sounds
+SHOOT_SOUND = ":resources:sounds/fall3.wav"

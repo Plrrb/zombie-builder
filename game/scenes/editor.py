@@ -56,9 +56,9 @@ class EditorScene:
         )
 
         if self.selected_block == self.wood_block_texture:
-            arcade.draw_circle_outline(metal_x, y, 32, (255, 128, 128), 4)
-        else:
             arcade.draw_circle_outline(wood_x, y, 32, (255, 128, 128), 4)
+        else:
+            arcade.draw_circle_outline(metal_x, y, 32, (255, 128, 128), 4)
 
     def draw_block_type(self, x, y, texture, text):
         arcade.draw_circle_filled(x, y, 30, (128, 128, 128))

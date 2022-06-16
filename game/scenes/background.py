@@ -32,13 +32,6 @@ class BackgroundScene:
     def update(self, dt):
         self.scene.update(dt)
 
-        if self.scene == self.editor_scene:
-            self.update_editor(dt)
-        elif self.scene == self.survive_scene:
-            self.update_survive(dt)
-
-        self.player.update(dt)
-
         self.player_controller.update(
             self.inputs[UP],
             self.inputs[DOWN],
@@ -46,7 +39,14 @@ class BackgroundScene:
             self.inputs[RIGHT],
         )
 
+        if self.scene == self.editor_scene:
+            self.update_editor(dt)
+        elif self.scene == self.survive_scene:
+            self.update_survive(dt)
+
     def update_editor(self, dt):
+        self.player.update(dt)
+
         if self.inputs[SELECT_WOOD_BLOCK]:
             self.editor_scene.set_block_type_wood()
         elif self.inputs[SELECT_METAL_BLOCK]:
