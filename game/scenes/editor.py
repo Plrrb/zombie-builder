@@ -1,11 +1,19 @@
 from arcade import SpriteList, draw_xywh_rectangle_filled, load_texture
 from arcade.key import MOD_SHIFT
-from game.config import BLOCK_SIZE, METAL_BLOCK_PATH, WOOD_BLOCK_PATH
+from game.config import (
+    BLOCK_SIZE,
+    HEIGHT,
+    METAL_BLOCK_PATH,
+    SELECT_METAL_BLOCK,
+    SELECT_WOOD_BLOCK,
+    WOOD_BLOCK_PATH,
+)
 from game.utils.blocks import WoodBlock, MetalBlock
 from game.utils.button import Button
 from game.utils.functions import fix_to_grid
 from game.utils.vector import Vector2
-from game.config import WIDTH, HEIGHT
+from game.config import WIDTH
+import arcade
 
 
 class EditorScene:
@@ -26,6 +34,37 @@ class EditorScene:
 
         draw_xywh_rectangle_filled(*self.shadow, *BLOCK_SIZE, (255, 255, 255))
         self.play_button.draw()
+
+        self.draw_block_buttons()
+
+    def draw_block_buttons(self):
+        y = HEIGHT - 50
+        wood_x = WIDTH / 2 - 25
+        metal_x = WIDTH / 2 + 25
+
+        self.draw_block_type(
+            wood_x,
+            y,
+            self.wood_block_texture,
+            str(SELECT_WOOD_BLOCK - 48),
+        )
+        self.draw_block_type(
+            metal_x,
+            y,
+            self.metal_block_texture,
+            str(SELECT_METAL_BLOCK - 48),
+        )
+
+        if self.selected_block == self.wood_block_texture:
+            arcade.draw_circle_outline(metal_x, y, 32, (255, 128, 128), 4)
+        else:
+            arcade.draw_circle_outline(wood_x, y, 32, (255, 128, 128), 4)
+
+    def draw_block_type(self, x, y, texture, text):
+        arcade.draw_circle_filled(x, y, 30, (128, 128, 128))
+
+        texture.draw_scaled(x, y)
+        arcade.draw_text(text, x - 5, y - 25)
 
     def update(self, dt):
         pass
