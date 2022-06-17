@@ -53,7 +53,7 @@ class SurviveScene:
         self.deal_damage_to_blocks_by_zombies(dt)
 
     def send_attack(self, player):
-        self.zombie_manager.send_attack(player)
+        self.zombie_manager.send_attack(player.position)
 
     def draw(self):
         self.blocks.draw()

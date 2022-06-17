@@ -23,8 +23,8 @@ class Zombie(arcade.Sprite):
         self.health.draw_health_bar(*self.position)
 
     def goto(self, pos):
-        x = (pos[0] - self.position[0]) + randint(-250, 250)
-        y = (pos[1] - self.position[1]) + randint(-250, 250)
+        x = pos[0] - self.position[0]
+        y = pos[1] - self.position[1]
 
         try:
             d = Vector2(x, y).normalize()
@@ -33,6 +33,6 @@ class Zombie(arcade.Sprite):
 
         self.velocity = list(d * self.max_speed)
 
-    def attack(self, block):
-        v = Vector2(block.position[0], block.position[1])
+    def attack(self, position):
+        v = Vector2(position[0], position[1])
         self.goto(v)

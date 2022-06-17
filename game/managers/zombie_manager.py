@@ -41,7 +41,15 @@ class ZombieManager:
         self.zombies.append(Zombie([-100, HEIGHT / 2]))
         self.zombies.append(Zombie([WIDTH + 100, HEIGHT / 2]))
         self.zombies.append(Zombie([WIDTH / 2, HEIGHT + 100]))
+        self.zombies.append(Zombie([WIDTH / 2, -100]))
 
-    def send_attack(self, thing):
-        for zombie in self.zombies:
-            zombie.attack(thing)
+    def send_attack(self, position):
+        left_side = [position[0] - 100, position[1]]
+        right_side = [position[0] + 100, position[1]]
+        top_side = [position[0], position[1] + 100]
+        bottom_side = [position[0], position[1] - 100]
+
+        self.zombies[0].attack(left_side)
+        self.zombies[1].attack(right_side)
+        self.zombies[2].attack(top_side)
+        self.zombies[3].attack(bottom_side)
