@@ -53,7 +53,7 @@ ZOMBIES = {
         "image": ":resources:images/animated_characters/zombie/zombie_idle.png",
     },
     "fast": {
-        "speed": (8, 8),
+        "speed": (4, 4),
         "max_health": 75,
         "image": "game/images/flash.png",
     },
