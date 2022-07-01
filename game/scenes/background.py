@@ -6,7 +6,6 @@ from game.config import (
     SELECT_METAL_BLOCK,
     SELECT_WOOD_BLOCK,
     UP,
-    ZOMBIE_TO_PLAYER_DAMAGE,
 )
 from game.creatures.player import Player
 from game.managers.player_controller import PlayerController
@@ -61,9 +60,9 @@ class BackgroundScene:
         self.deal_zombie_to_player_damage(dt)
 
     def deal_zombie_to_player_damage(self, dt):
-        hits = len(self.survive_scene.get_sprite_to_zombie_hits(self.player))
-        if self.player.health.sub_health(hits * ZOMBIE_TO_PLAYER_DAMAGE * dt):
-            print("you dead...")
+        for hit in self.survive_scene.get_sprite_to_zombie_hits(self.player):
+            if self.player.health.sub_health(hit.damage * dt):
+                print("you dead...")
 
     def switch_to_survive_scene(self):
         self.survive_scene = SurviveScene(self.editor_scene.get_blocks())
@@ -72,14 +71,8 @@ class BackgroundScene:
         self.scene = self.survive_scene
 
         self.physics_engines = [
-            PhysicsEngineSimple(
-                self.player,
-                self.survive_scene.blocks,
-            ),
-            PhysicsEngineSimple(
-                self.player,
-                self.zombies,
-            ),
+            PhysicsEngineSimple(self.player, self.survive_scene.blocks),
+            # PhysicsEngineSimple(self.player, self.zombies),
         ]
 
         for zombie in self.zombies:
@@ -94,7 +87,6 @@ class BackgroundScene:
             if self.editor_scene.play_button.is_pressed(position):
                 self.switch_to_survive_scene()
         elif self.scene == self.survive_scene:
-            self.scene.on_mouse_press(position, modifiers)
             velocity = (
                 position[0] - self.player.position[0],
                 position[1] - self.player.position[1],

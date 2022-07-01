@@ -14,5 +14,5 @@ class HealthManager:
     def draw_health_bar(self, x, y):
         x = x - 50
         y = y + 50
-        draw_xywh_rectangle_filled(x + 100, y, self.health - 100, 16, RED)
+        draw_xywh_rectangle_filled(x + 100, y, self.health - self.max_health, 16, RED)
         draw_xywh_rectangle_filled(x, y, self.health, 16, GREEN)

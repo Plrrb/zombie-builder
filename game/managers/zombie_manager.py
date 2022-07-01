@@ -2,7 +2,7 @@ import math
 
 from arcade import check_for_collision_with_list, SpriteList
 from game.config import HEIGHT, WIDTH
-from game.creatures.zombie import Zombie
+from game.creatures.zombie import DefaultZombie, FastZombie
 
 
 class ZombieManager:
@@ -38,18 +38,18 @@ class ZombieManager:
         # return arcade.check_for_collision_with_list(sprite, self.zombies)
 
     def spawn_zombies(self, count):
-        self.zombies.append(Zombie([-100, HEIGHT / 2]))
-        self.zombies.append(Zombie([WIDTH + 100, HEIGHT / 2]))
-        self.zombies.append(Zombie([WIDTH / 2, HEIGHT + 100]))
-        self.zombies.append(Zombie([WIDTH / 2, -100]))
+        self.zombies.append(FastZombie([-100, HEIGHT / 2]))
+        self.zombies.append(DefaultZombie([WIDTH + 100, HEIGHT / 2]))
+        self.zombies.append(DefaultZombie([WIDTH / 2, HEIGHT + 100]))
+        self.zombies.append(DefaultZombie([WIDTH / 2, -100]))
 
     def send_attack(self, position):
-        left_side = [position[0] - 100, position[1]]
-        right_side = [position[0] + 100, position[1]]
-        top_side = [position[0], position[1] + 100]
-        bottom_side = [position[0], position[1] - 100]
+        left_side = [position[0] - 30, position[1]]
+        right_side = [position[0] + 30, position[1]]
+        top_side = [position[0], position[1] + 30]
+        bottom_side = [position[0], position[1] - 30]
 
-        self.zombies[0].attack(left_side)
-        self.zombies[1].attack(right_side)
-        self.zombies[2].attack(top_side)
-        self.zombies[3].attack(bottom_side)
+        for zombie, position in zip(
+            self.zombies, (left_side, right_side, top_side, bottom_side)
+        ):
+            zombie.attack(position)

@@ -3,7 +3,7 @@ from game.config import (
     BULLET_TO_ZOMBIE_DAMAGE,
     HEIGHT,
     WIDTH,
-    ZOMBIE_TO_BLOCK_DAMAGE,
+    FIRE_RATE,
 )
 from game.managers.bullet_manager import BulletManager
 from game.managers.zombie_manager import ZombieManager
@@ -12,18 +12,20 @@ from game.managers.zombie_manager import ZombieManager
 class SurviveScene:
     def __init__(self, blocks):
         self.blocks = blocks
-        self.bullet_manager = BulletManager(1)
+        self.bullet_manager = BulletManager(FIRE_RATE)
         self.zombie_manager = ZombieManager()
         self.zombie_manager.spawn_zombies(3)
 
     def deal_damage_to_blocks_by_zombies(self, dt):
-        for block in self.blocks:
-            if self.zombie_manager.check_for_hits(block) and block.sub_health(
-                ZOMBIE_TO_BLOCK_DAMAGE * dt
-            ):
+        dead_blocks = []
 
-                # blocks_to_be_removed = set(blocks_to_be_removed)
-                self.blocks.remove(block)
+        for block in self.blocks:
+            for hit in self.zombie_manager.check_for_hits(block):
+                if block.sub_health(hit.block_damage * dt):
+                    dead_blocks.append(block)
+
+        for block in set(dead_blocks):
+            self.blocks.remove(block)
 
     def do_bullet_to_blocks_collsion(self, dt):
         hits = []
@@ -41,9 +43,10 @@ class SurviveScene:
         self.bullet_manager.remove_all_in_list(hits)
 
     def update(self, dt):
-        self.zombie_manager.update(dt)
-        self.bullet_manager.remove_bullets_outside(WIDTH, HEIGHT)
         self.bullet_manager.update(dt)
+        self.bullet_manager.remove_bullets_outside(WIDTH, HEIGHT)
+
+        self.zombie_manager.update(dt)
 
         self.do_bullet_to_blocks_collsion(dt)
 
