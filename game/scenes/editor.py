@@ -1,3 +1,4 @@
+import arcade
 from arcade import SpriteList, draw_xywh_rectangle_filled, load_texture
 from arcade.key import MOD_SHIFT
 from game.config import (
@@ -6,14 +7,13 @@ from game.config import (
     METAL_BLOCK_PATH,
     SELECT_METAL_BLOCK,
     SELECT_WOOD_BLOCK,
+    WIDTH,
     WOOD_BLOCK_PATH,
 )
-from game.utils.blocks import WoodBlock, MetalBlock
+from game.utils.blocks import MetalBlock, WoodBlock
 from game.utils.button import Button
 from game.utils.functions import fix_to_grid
 from game.utils.vector import Vector2
-from game.config import WIDTH
-import arcade
 
 
 class EditorScene:

@@ -1,5 +1,7 @@
 from arcade import PhysicsEngineSimple
 from game.config import (
+    BULLET_TO_BLOCK_DAMAGE,
+    BULLET_TO_ZOMBIE_DAMAGE,
     DOWN,
     LEFT,
     RIGHT,
@@ -12,7 +14,6 @@ from game.managers.player_controller import PlayerController
 from game.scenes.editor import EditorScene
 from game.scenes.survive import SurviveScene
 from game.utils.input import BooleanInput
-from game.utils.vector import Vector2
 
 
 class BackgroundScene:
@@ -30,6 +31,7 @@ class BackgroundScene:
 
     def update(self, dt):
         self.scene.update(dt)
+        self.player.update(dt)
 
         self.player_controller.update(
             self.inputs[UP],
@@ -44,8 +46,6 @@ class BackgroundScene:
             self.update_survive(dt)
 
     def update_editor(self, dt):
-        self.player.update(dt)
-
         if self.inputs[SELECT_WOOD_BLOCK]:
             self.editor_scene.set_block_type_wood()
         elif self.inputs[SELECT_METAL_BLOCK]:
@@ -57,12 +57,24 @@ class BackgroundScene:
         for engine in self.physics_engines:
             engine.update()
 
-        self.deal_zombie_to_player_damage(dt)
+        self.survive_scene.do_damage_to_all_colliding_zombies(
+            self.player.get_bullets(), BULLET_TO_ZOMBIE_DAMAGE * dt
+        )
 
-    def deal_zombie_to_player_damage(self, dt):
-        for hit in self.survive_scene.get_sprite_to_zombie_hits(self.player):
-            if self.player.health.sub_health(hit.damage * dt):
-                print("you dead...")
+        for bullet in self.player.get_bullets():
+            if self.survive_scene.sprite_collides_with_block(
+                bullet, BULLET_TO_BLOCK_DAMAGE * dt
+            ):
+                print("yes")
+                self.player.remove_bullet(bullet)
+
+        zombie_to_player_damage = sum(
+            zombie.player_damage
+            for zombie in self.survive_scene.get_zombies_that_hit(self.player)
+        )
+
+        if self.player.sub_health(zombie_to_player_damage * dt):
+            print("you dead")
 
     def switch_to_survive_scene(self):
         self.survive_scene = SurviveScene(self.editor_scene.get_blocks())
@@ -71,8 +83,7 @@ class BackgroundScene:
         self.scene = self.survive_scene
 
         self.physics_engines = [
-            PhysicsEngineSimple(self.player, self.survive_scene.blocks),
-            # PhysicsEngineSimple(self.player, self.zombies),
+            PhysicsEngineSimple(self.player, self.survive_scene.blocks)
         ]
 
         for zombie in self.zombies:
@@ -87,13 +98,7 @@ class BackgroundScene:
             if self.editor_scene.play_button.is_pressed(position):
                 self.switch_to_survive_scene()
         elif self.scene == self.survive_scene:
-            velocity = (
-                position[0] - self.player.position[0],
-                position[1] - self.player.position[1],
-            )
-
-            velocity = Vector2(*velocity).normalize()
-            self.survive_scene.shoot_from(self.player.position, velocity)
+            self.player.shoot_at(position)
 
     def on_key_press(self, symbol, modifiers):
         self.inputs.press(symbol)
@@ -105,7 +110,10 @@ class BackgroundScene:
         self.scene.on_mouse_motion(position)
 
     def on_mouse_drag(self, position, modifiers):
-        self.scene.on_mouse_drag(position, modifiers)
+        if self.scene == self.editor_scene:
+            self.editor_scene.on_mouse_drag(position, modifiers)
+        elif self.scene == self.survive_scene:
+            self.player.shoot_at(position)
 
     def on_mouse_release(self, position, modifiers):
         self.scene.on_mouse_release(position, modifiers)

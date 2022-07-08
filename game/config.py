@@ -27,8 +27,8 @@ PLAYER_HEALTH = 100
 WOOD_BLOCK_HEALTH = 100
 METAL_BLOCK_HEALTH = 360
 
-# Damage Settings (they will be multiplied by delta time so they are acually smaller)
-BULLET_TO_ZOMBIE_DAMAGE = 15
+# Damage Settings (they will be multiplied by delta time so they are smaller)
+BULLET_TO_ZOMBIE_DAMAGE = 20
 ZOMBIE_TO_PLAYER_DAMAGE = 20
 BULLET_TO_BLOCK_DAMAGE = 200
 
@@ -46,16 +46,24 @@ SHOOT_SOUND = ":resources:sounds/fall3.wav"
 
 ZOMBIES = {
     "default": {
-        "speed": (2, 2),
-        "max_health": 100,
-        "damage": 20,
-        "block_damage": 30,
         "image": ":resources:images/animated_characters/zombie/zombie_idle.png",
+        "speed": (1, 1),
+        "max_health": 100,
+        "player_damage": 20,
+        "block_damage": 30,
     },
     "fast": {
-        "speed": (4, 4),
-        "max_health": 75,
         "image": "game/images/flash.png",
+        "speed": (2.5, 2.5),
+        "max_health": 75,
+        "player_damage": 10,
+        "block_damage": 20,
     },
-    "slow": {},
+    "slow": {
+        "image": "game/images/slow.png",
+        "speed": (1, 1),
+        "max_health": 300,
+        "player_damage": 70,
+        "block_damage": 100,
+    },
 }

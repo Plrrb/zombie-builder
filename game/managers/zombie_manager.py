@@ -1,8 +1,9 @@
 import math
+import random
 
-from arcade import check_for_collision_with_list, SpriteList
+from arcade import SpriteList, check_for_collision_with_list
 from game.config import HEIGHT, WIDTH
-from game.creatures.zombie import DefaultZombie, FastZombie
+from game.creatures.zombie import DefaultZombie, FastZombie, SlowZombie, Zombie
 
 
 class ZombieManager:
@@ -26,7 +27,8 @@ class ZombieManager:
             if zombie.health.sub_health(z_damage):
                 self.zombies.remove(zombie)
 
-    def check_for_hits(self, sprite):
+    def check_for_hits(self, sprite) -> Zombie:
+        # return arcade.check_for_collision_with_list(sprite, self.zombies)
         hits = []
 
         for zombie in self.zombies:
@@ -35,13 +37,24 @@ class ZombieManager:
 
         return hits
 
-        # return arcade.check_for_collision_with_list(sprite, self.zombies)
+    def get_zombies_that_hit(self, sprite) -> SpriteList:
+        return check_for_collision_with_list(sprite, self.zombies)
 
     def spawn_zombies(self, count):
-        self.zombies.append(FastZombie([-100, HEIGHT / 2]))
-        self.zombies.append(DefaultZombie([WIDTH + 100, HEIGHT / 2]))
-        self.zombies.append(DefaultZombie([WIDTH / 2, HEIGHT + 100]))
-        self.zombies.append(DefaultZombie([WIDTH / 2, -100]))
+        spawn_points = (
+            [WIDTH / 2, -100],
+            [WIDTH - 100, HEIGHT / 2],
+            [WIDTH + 100, HEIGHT / 2],
+            [WIDTH / 2, HEIGHT + 100],
+        )
+
+        self.zombies.append(SlowZombie(random.choice(spawn_points)))
+
+        for _ in range(count // 2):
+            self.zombies.append(DefaultZombie(random.choice(spawn_points)))
+
+        for _ in range(count // 4):
+            self.zombies.append(FastZombie(random.choice(spawn_points)))
 
     def send_attack(self, position):
         left_side = [position[0] - 30, position[1]]

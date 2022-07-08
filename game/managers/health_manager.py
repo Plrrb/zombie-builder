@@ -12,10 +12,9 @@ class HealthManager:
         return self.health <= 0
 
     def draw_health_bar(self, x, y):
-        x = x - self.max_health / 2
-        y = y + self.max_health / 2
+        x -= 50
 
-        draw_xywh_rectangle_filled(
-            x + self.max_health, y, self.health - self.max_health, 16, RED
-        )
-        draw_xywh_rectangle_filled(x, y, self.health, 16, GREEN)
+        width = (100 / self.max_health) * self.health
+
+        draw_xywh_rectangle_filled(x, y, 100, 16, RED)
+        draw_xywh_rectangle_filled(x, y, width, 16, GREEN)

@@ -1,10 +1,10 @@
 from arcade import Sprite
 from game.config import (
+    BLOCK_SIZE,
     METAL_BLOCK_HEALTH,
+    METAL_BLOCK_PATH,
     WOOD_BLOCK_HEALTH,
     WOOD_BLOCK_PATH,
-    METAL_BLOCK_PATH,
-    BLOCK_SIZE,
 )
 from game.managers.health_manager import HealthManager
 
