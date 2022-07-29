@@ -1,5 +1,5 @@
 import arcade
-from game.config import ZOMBIES
+from game.config import ZOMBIE_BULLET_PATH, ZOMBIES
 from game.managers.bullet_manager import BulletManager
 from game.managers.health_manager import HealthManager
 from game.utils.vector import Vector2
@@ -31,6 +31,11 @@ class Zombie(arcade.Sprite):
 
         self.velocity = list(d * self.max_speed)
 
+    def damage_to(self, sprite):
+        if arcade.check_for_collision(self, sprite):
+            return self.player_damage
+        return 0
+
 
 class DefaultZombie(Zombie):
     def __init__(self, position):
@@ -57,7 +62,7 @@ class FastZombie(DefaultZombie, Zombie):
 class SlowZombie(Zombie):
     def __init__(self, position):
         super().__init__(position, **ZOMBIES["slow"])
-        self.bullet_manager = BulletManager(2)
+        self.bullet_manager = BulletManager(ZOMBIE_BULLET_PATH, 2)
 
     def draw(self):
         super().draw()
@@ -73,3 +78,14 @@ class SlowZombie(Zombie):
     def attack(self, position):
         self.goto(position)
         self.bullet_manager.shoot_from_start_to_target(self.position, position)
+        self.bullet_manager.curve_bullets(position)
+
+    def damage_to(self, sprite):
+        bullet_damage = (
+            len(self.bullet_manager.check_for_hits(sprite)) * self.player_damage
+        )
+
+        if arcade.check_for_collision(self, sprite):
+            return super().damage_to(sprite) + bullet_damage
+
+        return bullet_damage

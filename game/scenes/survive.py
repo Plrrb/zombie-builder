@@ -1,4 +1,4 @@
-from arcade import check_for_collision_with_list, SpriteList
+from arcade import SpriteList, check_for_collision_with_list
 from game.managers.zombie_manager import ZombieManager
 
 
@@ -48,6 +48,9 @@ class SurviveScene:
 
     def get_zombies_that_hit(self, sprite):
         return self.zombie_manager.get_zombies_that_hit(sprite)
+
+    def get_zombie_damage_to(self, sprite):
+        return self.zombie_manager.get_zombie_damage_to(sprite)
 
     def send_attack(self, sprite):
         self.zombie_manager.send_attack(sprite.position)

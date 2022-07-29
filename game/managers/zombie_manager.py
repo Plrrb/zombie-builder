@@ -40,6 +40,14 @@ class ZombieManager:
     def get_zombies_that_hit(self, sprite) -> SpriteList:
         return check_for_collision_with_list(sprite, self.zombies)
 
+    def get_zombie_damage_to(self, sprite):
+        total_damage = 0
+
+        for zombie in self.zombies:
+            total_damage += zombie.damage_to(sprite)
+
+        return total_damage
+
     def spawn_zombies(self, count):
         spawn_points = (
             [WIDTH / 2, -100],

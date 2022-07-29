@@ -18,7 +18,7 @@ SELECT_METAL_BLOCK = key.KEY_2
 WOOD_BLOCK_PATH = "game/images/wood_block.png"
 METAL_BLOCK_PATH = "game/images/metal_block.png"
 
-BULLET_PATH = ":resources:images/space_shooter/laserBlue01.png"
+PLAYER_BULLET_PATH = ":resources:images/space_shooter/laserBlue01.png"
 ZOMBIE_PATH = ":resources:images/animated_characters/zombie/zombie_idle.png"
 PLAYER_PATH = ":resources:images/animated_characters/robot/robot_idle.png"
 
@@ -44,6 +44,8 @@ BLOCK_SIZE = (25, 25)
 # Sounds
 SHOOT_SOUND = ":resources:sounds/fall3.wav"
 
+ZOMBIE_BULLET_PATH = "game/images/vomit.png"
+
 ZOMBIES = {
     "default": {
         "image": ":resources:images/animated_characters/zombie/zombie_idle.png",
@@ -63,7 +65,7 @@ ZOMBIES = {
         "image": "game/images/slow.png",
         "speed": (1, 1),
         "max_health": 300,
-        "player_damage": 70,
+        "player_damage": 15,
         "block_damage": 100,
     },
 }

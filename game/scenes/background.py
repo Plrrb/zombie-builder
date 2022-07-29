@@ -65,13 +65,15 @@ class BackgroundScene:
             if self.survive_scene.sprite_collides_with_block(
                 bullet, BULLET_TO_BLOCK_DAMAGE * dt
             ):
-                print("yes")
+
                 self.player.remove_bullet(bullet)
 
-        zombie_to_player_damage = sum(
-            zombie.player_damage
-            for zombie in self.survive_scene.get_zombies_that_hit(self.player)
-        )
+        # zombie_to_player_damage = sum(
+        #     zombie.player_damage
+        #     for zombie in self.survive_scene.get_zombies_that_hit(self.player)
+        # )
+
+        zombie_to_player_damage = self.survive_scene.get_zombie_damage_to(self.player)
 
         if self.player.sub_health(zombie_to_player_damage * dt):
             print("you dead")

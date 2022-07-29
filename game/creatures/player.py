@@ -6,9 +6,10 @@ from game.config import (
     PLAYER_PATH,
     PLAYER_SPEED,
     WIDTH,
+    PLAYER_BULLET_PATH,
 )
-from game.managers.health_manager import HealthManager
 from game.managers.bullet_manager import BulletManager
+from game.managers.health_manager import HealthManager
 
 
 class Player(Sprite):
@@ -19,7 +20,7 @@ class Player(Sprite):
         self.friction = (0.5, 0.5)
         self.max_speed = PLAYER_SPEED
         self.health = HealthManager(PLAYER_HEALTH)
-        self.bullet_manager = BulletManager(FIRE_RATE)
+        self.bullet_manager = BulletManager(PLAYER_BULLET_PATH, FIRE_RATE)
 
     def draw(self):
         super().draw()

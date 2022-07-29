@@ -7,10 +7,11 @@ from game.utils.vector import Vector2
 class BulletManager:
     shoot_sound = load_sound(SHOOT_SOUND)
 
-    def __init__(self, fire_rate):
+    def __init__(self, bullet_image_path, fire_rate):
         self.fire_rate = fire_rate
         self.bullets = SpriteList()
         self.time_left_to_shoot = 0
+        self.bullet_image_path = bullet_image_path
 
     def draw(self):
         for bullet in self.bullets:
@@ -44,12 +45,16 @@ class BulletManager:
         except ZeroDivisionError:
             velocity = (0, 0)
 
-        self.bullets.append(Bullet(start, velocity))
+        self.bullets.append(Bullet(self.bullet_image_path, start, tuple(velocity)))
         self.time_left_to_shoot = self.fire_rate
         play_sound(self.shoot_sound, 1)
 
     def check_for_hits(self, sprite):
         return check_for_collision_with_list(sprite, self.bullets)
+
+    def curve_bullets(self, position):
+        for bullet in self.bullets:
+            bullet.curve(position)
 
     def remove_bullet(self, bullet):
         self.bullets.remove(bullet)
